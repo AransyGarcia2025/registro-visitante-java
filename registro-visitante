@@ -1,8 +1,3 @@
-// Cambios aplicados:
-// - ID personal como String para permitir letras y guiones
-// - Manejo de "si/no" en cita previa
-// - Validaciones claras y limpias
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
