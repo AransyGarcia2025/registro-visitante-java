@@ -1,0 +1,148 @@
+// Cambios aplicados:
+// - ID personal como String para permitir letras y guiones
+// - Manejo de "si/no" en cita previa
+// - Validaciones claras y limpias
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
+
+public class RegistroVisitante {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Declaración de variables
+        String nombre, apellido, nombreResidente, motivo;
+        String idPersonal; // ahora como texto
+        long telefono = 0;
+        short numeroDepartamento = 0;
+        byte piso = 0;
+        int duracionVisita = 0;
+        boolean tieneCita = false;
+        char inicialNombre;
+
+        // Fecha automática
+        LocalDate fechaActual = LocalDate.now();
+        String fechaFormateada = fechaActual.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        System.out.println("=== REGISTRO DE VISITANTE AL EDIFICIO ===");
+
+        // Nombre
+        do {
+            System.out.print("Nombre: ");
+            nombre = scanner.nextLine().trim();
+        } while (nombre.isEmpty());
+        inicialNombre = nombre.charAt(0);
+
+        // Apellido
+        do {
+            System.out.print("Apellido: ");
+            apellido = scanner.nextLine().trim();
+        } while (apellido.isEmpty());
+
+        // ID personal como texto (acepta letras y guiones)
+        do {
+            System.out.print("Número de identificación (ID): ");
+            idPersonal = scanner.nextLine().trim();
+        } while (idPersonal.isEmpty());
+
+        // Teléfono
+        do {
+            System.out.print("Teléfono: ");
+            if (scanner.hasNextLong()) {
+                telefono = scanner.nextLong();
+                break;
+            }
+            System.out.println("❌ Teléfono inválido. Intente de nuevo.");
+            scanner.nextLine(); // limpiar
+        } while (true);
+
+        scanner.nextLine(); // limpiar
+
+        // Residente
+        do {
+            System.out.print("Nombre del residente que visita: ");
+            nombreResidente = scanner.nextLine().trim();
+        } while (nombreResidente.isEmpty());
+
+        // Departamento
+        System.out.print("Número de departamento: ");
+        numeroDepartamento = scanner.nextShort();
+
+        // Piso
+        System.out.print("Piso: ");
+        piso = scanner.nextByte();
+        scanner.nextLine(); // limpiar
+
+        // Motivo
+        do {
+            System.out.print("Motivo de la visita: ");
+            motivo = scanner.nextLine().trim();
+        } while (motivo.isEmpty());
+
+        // Duración
+        do {
+            System.out.print("Duración estimada (en minutos): ");
+            if (scanner.hasNextInt()) {
+                duracionVisita = scanner.nextInt();
+                break;
+            }
+            System.out.println("❌ Ingrese solo el número de minutos (ej. 120)");
+            scanner.nextLine();
+        } while (true);
+
+        scanner.nextLine(); // limpiar
+
+        // Cita previa como texto "si"/"no"
+        do {
+            System.out.print("¿Tiene cita previa? (si/no): ");
+            String respuesta = scanner.nextLine().trim().toLowerCase();
+            if (respuesta.equals("si")) {
+                tieneCita = true;
+                break;
+            } else if (respuesta.equals("no")) {
+                tieneCita = false;
+                break;
+            } else {
+                System.out.println("Respuesta inválida. Escriba 'si' o 'no'.");
+            }
+        } while (true);
+
+        // Mostrar resumen
+        System.out.println("\n=== DATOS DEL VISITANTE ===");
+        System.out.println("Nombre completo: " + nombre + " " + apellido);
+        System.out.println("Inicial del nombre: " + inicialNombre);
+        System.out.println("ID personal: " + idPersonal);
+        System.out.println("Teléfono: " + telefono);
+        System.out.println("Visita a: " + nombreResidente);
+        System.out.println("Departamento: " + numeroDepartamento + ", Piso: " + piso);
+        System.out.println("Motivo: " + motivo);
+        System.out.println("Duración estimada: " + duracionVisita + " minutos");
+        System.out.println("Fecha de la visita: " + fechaFormateada);
+        System.out.println("¿Tiene cita previa?: " + (tieneCita ? "Sí" : "No"));
+
+        // Guardar en archivo
+        try {
+            FileWriter writer = new FileWriter("registro_visitantes.txt", true);
+            writer.write("====================================\n");
+            writer.write("Nombre: " + nombre + " " + apellido + "\n");
+            writer.write("Inicial: " + inicialNombre + "\n");
+            writer.write("ID: " + idPersonal + "\n");
+            writer.write("Teléfono: " + telefono + "\n");
+            writer.write("Visita a: " + nombreResidente + "\n");
+            writer.write("Departamento: " + numeroDepartamento + ", Piso: " + piso + "\n");
+            writer.write("Motivo: " + motivo + "\n");
+            writer.write("Duración: " + duracionVisita + " minutos\n");
+            writer.write("Fecha: " + fechaFormateada + "\n");
+            writer.write("Cita previa: " + (tieneCita ? "Sí" : "No") + "\n\n");
+            writer.close();
+            System.out.println("\n Registro guardado correctamente.");
+        } catch (IOException e) {
+            System.out.println("Error al guardar archivo: " + e.getMessage());
+        }
+
+        scanner.close();
+    }
+}
